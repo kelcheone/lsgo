@@ -95,6 +95,20 @@ func AddToLong(dir string, files []fs.FileInfo, all []Long, ignore bool) []Long 
 	return all
 }
 
+func Help() {
+	// -ls, -l, -la, -a, -r, -s, -S, -h
+	fmt.Println("Usage: lsgo [OPTION]... [FILE]...")
+	fmt.Printf("%s\t%s", "-ls", "List files in current directory\n")
+	fmt.Printf("%s\t%s", "-l", "List files in current directory with long format\n")
+	fmt.Printf("%s\t%s", "-la", "List files in current directory with long format and hidden files\n")
+	fmt.Printf("%s\t%s", "-a", "List files in current directory with hidden files\n")
+	fmt.Printf("%s\t%s", "-r", "List files in current directory in reverse order\n")
+	fmt.Printf("%s\t%s", "-s", "List files in current directory with size\n")
+	fmt.Printf("%s\t%s", "-S", "List files in current directory with size in reverse order\n")
+	fmt.Printf("%s\t%s", "-h", "Show help\n")
+
+}
+
 func isDir(file string) {
 	c := color.New(color.FgBlue)
 	bold := c.Add(color.Bold)

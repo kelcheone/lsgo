@@ -67,6 +67,11 @@ func main() {
 	} else if t == "-S" {
 		// Sort by file size
 		SortFileSize(dir)
+	} else if t == "-h" || t == "--help" {
+		Help()
+	} else {
+		fmt.Printf("lsgo: invalid option -- '%v'\n", t)
+		Help()
 	}
 
 }
