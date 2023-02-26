@@ -5,9 +5,16 @@ import (
 	"io/fs"
 	"os"
 	"path/filepath"
-	"sort"
 	"strings"
 )
+
+type Long struct {
+	perm    string
+	size    string
+	sizeint int
+	time    string
+	name    string
+}
 
 func ReadDir(dir string) ([]fs.FileInfo, error) {
 	f, err := os.Open(dir)
@@ -19,9 +26,6 @@ func ReadDir(dir string) ([]fs.FileInfo, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	sort.Slice(list, func(i, j int) bool { return list[i].Name() < list[j].Name() })
-
 	return list, nil
 }
 
@@ -31,16 +35,26 @@ func handleErr(err error) {
 	}
 }
 
-func createLong(path string) (string, error) {
+func createLong(path string) (Long, error) {
 	f, err := os.Lstat(path)
+	long := &Long{}
 	if err != nil {
-		return "", err
+		return *long, err
 	}
 	fileName := filepath.Base(path)
+	size := fmt.Sprintf("%v", f.Size())
+	if int(f.Size()) > 1000 {
+		size = fmt.Sprintf("%.1fK", float32(f.Size())/1000)
+	}
+	long = &Long{
+		perm:    f.Mode().Perm().String(),
+		size:    size,
+		sizeint: int(f.Size()),
+		time:    f.ModTime().Format("01 Feb 15:04"),
+		name:    fileName,
+	}
 
-	nf := fmt.Sprintf("%v \t %v \t%v\t %v", f.Mode().Perm(), f.Size(), f.ModTime().Format("01 Feb 15:04"), fileName)
-
-	return nf, nil
+	return *long, nil
 }
 
 func hasFlag(flag string, prefix string) bool {

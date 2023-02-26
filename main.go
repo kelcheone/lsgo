@@ -60,16 +60,18 @@ func main() {
 		ListLong(dir)
 	} else if t == "-ls" {
 		//list with long format with file size
-		ListLongFileSize(dir)
+		ListLong(dir)
 	} else if t == "-r" {
 		// list files in reverse order
-		Reverse(dir)
+		All(dir, t)
 	} else if t == "-s" {
 		// List file size
 		ListFileSize(dir)
+		All(dir, t)
 	} else if t == "-S" {
 		// Sort by file size
 		SortFileSize(dir)
+		All(dir, t)
 	}
 
 }
