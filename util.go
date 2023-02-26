@@ -64,3 +64,29 @@ func hasFlag(flag string, prefix string) bool {
 func listFlag(args []string) bool {
 	return strings.HasPrefix(args[0], "-")
 }
+
+func AddToLong(dir string, files []fs.FileInfo, all []Long, ignore bool) []Long {
+	for _, file := range files {
+		if dir == "." {
+			long, _ := createLong(file.Name())
+			if !ignore {
+				all = append(all, long)
+			} else {
+				if !hasFlag(long.name, ".") {
+					all = append(all, long)
+				}
+			}
+		} else {
+			tPath := fmt.Sprintf("%v/%v", dir, file.Name())
+			long, _ := createLong(tPath)
+			if !ignore {
+				all = append(all, long)
+			} else {
+				if !hasFlag(long.name, ".") {
+					all = append(all, long)
+				}
+			}
+		}
+	}
+	return all
+}

@@ -1,6 +1,3 @@
-// This app will be added to path and will be invocked by calling `gols`
-// `gols` will take all the commands required by the ls command
-// It will use filepath package to access the directories
 package main
 
 import (
@@ -51,7 +48,6 @@ func main() {
 		All(dir, t)
 	} else if t == "-a" {
 		All(dir, t)
-
 	} else if t == "-la" {
 		//list long format including hidden files
 		ListLongAll(dir)
@@ -63,15 +59,13 @@ func main() {
 		ListLong(dir)
 	} else if t == "-r" {
 		// list files in reverse order
-		All(dir, t)
+		Reverse(dir)
 	} else if t == "-s" {
 		// List file size
 		ListFileSize(dir)
-		All(dir, t)
 	} else if t == "-S" {
 		// Sort by file size
 		SortFileSize(dir)
-		All(dir, t)
 	}
 
 }
