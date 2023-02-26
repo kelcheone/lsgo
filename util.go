@@ -6,14 +6,17 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	color "github.com/fatih/color"
 )
 
 type Long struct {
 	perm    string
 	size    string
-	sizeint int
+	sizeInt int
 	time    string
 	name    string
+	file    fs.FileInfo
 }
 
 func ReadDir(dir string) ([]fs.FileInfo, error) {
@@ -49,9 +52,10 @@ func createLong(path string) (Long, error) {
 	long = &Long{
 		perm:    f.Mode().Perm().String(),
 		size:    size,
-		sizeint: int(f.Size()),
+		sizeInt: int(f.Size()),
 		time:    f.ModTime().Format("01 Feb 15:04"),
 		name:    fileName,
+		file:    f,
 	}
 
 	return *long, nil
@@ -89,4 +93,46 @@ func AddToLong(dir string, files []fs.FileInfo, all []Long, ignore bool) []Long 
 		}
 	}
 	return all
+}
+
+func isDir(file string) {
+	c := color.New(color.FgBlue)
+	bold := c.Add(color.Bold)
+	bold.Printf("%v\t", file)
+}
+
+func isExec(file string) {
+	c := color.New(color.FgGreen)
+	bold := c.Add(color.Bold)
+	bold.Printf("%v\t", file)
+}
+
+func isExecutable(file fs.FileInfo) bool {
+	return file.Mode()&0111 != 0
+}
+
+func lsPrint(file fs.FileInfo) {
+	if file.IsDir() {
+		isDir(file.Name())
+	} else if isExecutable(file) {
+		isExec(file.Name())
+	} else {
+		fmt.Printf("%v\t", file.Name())
+	}
+}
+
+func lsPrintLong(file fs.FileInfo) {
+	c := color.New(color.FgBlue)
+	bold := c.Add(color.Bold)
+
+	e := color.New(color.FgGreen)
+	boldE := e.Add(color.Bold)
+	if file.IsDir() {
+		bold.Printf("%v \t %v \t%v\t %v \n", file.Mode().Perm().String(), file.Size(), file.ModTime().Format("01 Feb 15:04"), file.Name())
+	} else if isExecutable(file) {
+		boldE.Printf("%v \t %v \t%v\t %v \n", file.Mode().Perm().String(), file.Size(), file.ModTime().Format("01 Feb 15:04"), file.Name())
+	} else {
+		fmt.Printf("%v \t %v \t%v\t %v \n", file.Mode().Perm().String(), file.Size(), file.ModTime().Format("01 Feb 15:04"), file.Name())
+	}
+
 }

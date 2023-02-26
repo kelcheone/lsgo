@@ -7,6 +7,7 @@ import (
 )
 
 func main() {
+
 	args := os.Args[1:]
 	var dir string
 	var t string
